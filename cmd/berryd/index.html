@@ -1,0 +1,58 @@
+<!doctype html>
+<pre id="history" style="min-height: 400px; width: 400px; border: dotted 2px #eee; margin: 10px 0;"></pre>
+<input id="room" type="text" value="townhall" required>
+<input id="msg" type="text" required autofocus placeholder="Type your message here. ENTER to send.">
+<style>
+.mymsg { color: #ddd; }
+.servermsg { color: #000; }
+</style>
+<script>
+window.addEventListener("load", function() {
+  var currentRoom = document.getElementById("room").value
+
+  ws = new WebSocket("ws://localhost:8000/ws")
+  ws.onmessage = function(event) {
+    var history = document.getElementById("history")
+    history.innerHTML += '<code class="servermsg">' + event.data + '<code>\n'
+  }
+
+  function sendws(data) {
+    var history = document.getElementById("history")
+    history.innerHTML += '<code class="mymsg">' + data + '<code>\n'
+    ws.send(data)
+  }
+
+  ws.onopen = function() {
+      sendws(JSON.stringify(["nick", "rickybobby"]))
+      sendws(JSON.stringify(["join", currentRoom]))
+  }
+
+  document.getElementById("msg").addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault()
+      var text = event.target.value
+      event.target.value = ""
+      sendws(JSON.stringify(["say", currentRoom, text]))
+    }
+  })
+
+  document.getElementById("room").addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault()
+      var room = trim(event.target.value)
+      if (room.length === 0 || currentRoom === room) {
+        return
+      }
+      sendws(JSON.stringify(["quit", currentRoom]))
+      currentRoom = room
+      sendws(JSON.stringify(["join", currentRoom]))
+    }
+  })
+
+
+  function trim(s) {
+    return s.replace(/^\s+|\s+$/g, '')
+  }
+})
+
+</script>

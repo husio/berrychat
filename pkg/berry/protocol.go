@@ -1,4 +1,4 @@
-package chat
+package berry
 
 import (
 	"encoding/json"
@@ -41,8 +41,6 @@ import (
 //    ["parted", "<user id>", "<room id>"]
 //
 //    ["renamed", "<user id>", "<new nick>"]
-//
-//    ["usernick", "<user id>", "<nick>"]
 //
 //    ["roomusers", "<room id>", "<user 1 id>", "<user 2 id>", ...]
 //

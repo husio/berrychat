@@ -1,4 +1,4 @@
-package chat
+package berry
 
 import (
 	"context"
@@ -71,11 +71,5 @@ func (c *testClientConnection) WriteMessage(messageType int, body []byte) error 
 	defer c.Unlock()
 
 	c.Written = append(c.Written, string(body))
-	return c.Err
-}
-
-func (c *testClientConnection) Close() error {
-	c.Lock()
-	defer c.Unlock()
 	return c.Err
 }

@@ -1,4 +1,4 @@
-package chat
+package berry
 
 import (
 	"context"
@@ -33,6 +33,7 @@ type Chat interface {
 	CreateUser(out chan<- Message) User
 	RemoveUser(User)
 	Room(roomID string) Room
+	// RenameUser(User, string) error
 }
 
 func NewChat() Chat {
@@ -60,6 +61,7 @@ func (c *chat) Room(roomID string) Room {
 		id:    roomID,
 		users: make(map[string]User),
 	}
+	c.rooms[roomID] = r
 	return r
 }
 
