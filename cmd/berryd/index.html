@@ -23,8 +23,8 @@ window.addEventListener("load", function() {
   }
 
   ws.onopen = function() {
-      sendws(JSON.stringify(["nick", "rickybobby"]))
-      sendws(JSON.stringify(["join", currentRoom]))
+      sendws(JSON.stringify([randomId(), "nick", "rickybobby"]))
+      sendws(JSON.stringify([randomId(), "join", currentRoom]))
   }
 
   document.getElementById("msg").addEventListener("keydown", function(event) {
@@ -32,7 +32,7 @@ window.addEventListener("load", function() {
       event.preventDefault()
       var text = event.target.value
       event.target.value = ""
-      sendws(JSON.stringify(["say", currentRoom, text]))
+      sendws(JSON.stringify([randomId(), "say", currentRoom, text]))
     }
   })
 
@@ -43,12 +43,21 @@ window.addEventListener("load", function() {
       if (room.length === 0 || currentRoom === room) {
         return
       }
-      sendws(JSON.stringify(["quit", currentRoom]))
+      sendws(JSON.stringify([randomId(), "quit", currentRoom]))
       currentRoom = room
-      sendws(JSON.stringify(["join", currentRoom]))
+      sendws(JSON.stringify([randomId(), "join", currentRoom]))
     }
   })
 
+
+  function randomId() {
+    var allowed = "0123456789abcdef"
+    var chars = []
+    for (var i=0; i<8; i++) {
+      chars.push(allowed.charAt(Math.floor(Math.random() * allowed.length)))
+    }
+    return chars.join('')
+  }
 
   function trim(s) {
     return s.replace(/^\s+|\s+$/g, '')

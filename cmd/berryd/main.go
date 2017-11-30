@@ -35,12 +35,7 @@ func (h *wsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	switch err := berry.HandleClient(r.Context(), h.chat, conn); err {
-	case nil:
-		// all good
-	default:
-		log.Printf("client error: %v", err)
-	}
+	_ = berry.HandleClient(r.Context(), h.chat, conn)
 }
 
 var upgrader = websocket.Upgrader{

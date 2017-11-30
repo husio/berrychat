@@ -60,7 +60,7 @@ handleNextMessage:
 
 		msg, err := ParseMessage(raw)
 		if err != nil {
-			emsg := ErrMessage(fmt.Sprintf("invalid message: %v", err))
+			emsg := ErrMessage("", fmt.Sprintf("invalid message: %v", err))
 			if err := user.Send(ctx, emsg); err != nil {
 				return fmt.Errorf("cannot send message: %s", err)
 			}
@@ -69,12 +69,12 @@ handleNextMessage:
 
 		var response Message
 		if handle, ok := messageHandler[msg.Kind()]; !ok {
-			response = ErrMessage("unknown message")
+			response = ErrMessage(msg.RequestID(), "unknown message")
 		} else {
 			if err := handle(ctx, chat, user, msg); err != nil {
-				response = ErrMessage(err.Error())
+				response = ErrMessage(msg.RequestID(), err.Error())
 			} else {
-				response = OKMessage()
+				response = OKMessage(msg.RequestID())
 			}
 		}
 

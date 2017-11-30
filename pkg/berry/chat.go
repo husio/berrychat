@@ -24,6 +24,7 @@ type Room interface {
 }
 
 type Message interface {
+	RequestID() string
 	Kind() string
 	Content() []string
 	JSON() []byte
